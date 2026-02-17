@@ -35,4 +35,8 @@ return [
         ],
     ],
 
+    'asset' => [
+        'url' => env('ASSET_URL', null),
+    ],
+
 ];

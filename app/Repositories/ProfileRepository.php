@@ -18,6 +18,9 @@ class ProfileRepository
 
     public function update(array $data, $id)
     {
-        return Profile::find($id)->update($data);
+        $profile = Profile::find($id);
+        $profile->update($data);
+
+        return $profile->refresh();
     }
 }

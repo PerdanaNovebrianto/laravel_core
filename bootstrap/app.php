@@ -4,6 +4,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Auth\AuthenticationException;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Illuminate\Http\Request;
 
 return Application::configure(basePath: dirname(__DIR__))
@@ -15,7 +16,9 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
-            'hashids' => \App\Http\Middleware\DecodeHashids::class,
+            'hashids'   => \App\Http\Middleware\DecodeHashids::class,
+            'ability'   => \Laravel\Sanctum\Http\Middleware\CheckForAnyAbility::class,
+            'abilities' => \Laravel\Sanctum\Http\Middleware\CheckAbilities::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
@@ -25,6 +28,15 @@ return Application::configure(basePath: dirname(__DIR__))
                     'status'  => 'error',
                     'message' => 'Unauthenticated',
                 ], 401);
+            }
+        });
+
+        $exceptions->render(function (AccessDeniedHttpException $e, Request $request) {
+            if ($request->is('api/*') || $request->expectsJson()) {
+                return response()->json([
+                    'status'  => 'error',
+                    'message' => 'Forbidden',
+                ], 403);
             }
         });
     })->create();

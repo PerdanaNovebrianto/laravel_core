@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\User;
 use App\Repositories\UserRepository;
 use App\Repositories\ProfileRepository;
+use App\Repositories\RoleRepository;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Sanctum\PersonalAccessToken;
@@ -14,7 +15,8 @@ class AuthService
 {
     public function __construct(
         protected UserRepository $userRepo,
-        protected ProfileRepository $profileRepo
+        protected ProfileRepository $profileRepo,
+        protected RoleRepository $roleRepo
     ) {}
 
     public function register(array $data)
@@ -23,6 +25,7 @@ class AuthService
             $user = $this->userRepo->create([
                 'email'    => $data['email'],
                 'password' => Hash::make($data['password']),
+                'role_id'  => $this->roleRepo->getByName('User')->id,
             ]);
 
             $profile = $this->profileRepo->create([
@@ -42,9 +45,11 @@ class AuthService
             throw new \Exception('Invalid credentials', 401);
         }
 
-        $user->load('profile');
+        $user->load('role', 'profile');
 
-        $accessToken = $user->createToken('access_token', ['*']);
+        $privileges = $user->role ? explode(',', $user->role->privileges) : [];
+
+        $accessToken = $user->createToken('access_token', $privileges);
         $accessToken->accessToken->expires_at = Carbon::now()->addMinutes(config('sanctum.access_token_expiration'));
         $accessToken->accessToken->save();
 
@@ -73,10 +78,13 @@ class AuthService
         }
     
         $user = $tokenInstance->tokenable;
+        $user->load('role');
     
         $tokenInstance->delete();
 
-        $accessToken = $user->createToken('access_token', ['*']);
+        $privileges = $user->role ? explode(',', $user->role->privileges) : [];
+
+        $accessToken = $user->createToken('access_token', $privileges);
         $accessToken->accessToken->expires_at = Carbon::now()->addMinutes(config('sanctum.access_token_expiration'));
         $accessToken->accessToken->save();
 
@@ -90,12 +98,17 @@ class AuthService
         ];
     }
 
-    public function logout($currentToken)
+    public function logout($currentAccessToken, ?string $currentRefreshToken = null)
     {
-        if (!$currentToken) {
-            throw new \Exception('No active session found.');
+        $currentAccessToken->delete();
+
+        if ($currentRefreshToken) {
+            $tokenInstance = PersonalAccessToken::findToken($currentRefreshToken);
+            if ($tokenInstance && $tokenInstance->can('refresh-token')) {
+                $tokenInstance->delete();
+            }   
         }
-    
-        $currentToken->delete();
+
+        return true;
     }
 }

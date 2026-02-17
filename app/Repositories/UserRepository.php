@@ -8,7 +8,9 @@ class UserRepository
 {
     public function getAll()
     {
-        return User::all();
+        return User::whereHas('role', function ($query) {
+            $query->where('name', '!=', 'super admin');
+        })->get();
     }
 
     public function getByEmail($email)
@@ -28,7 +30,10 @@ class UserRepository
 
     public function update(array $data, $id)
     {
-        return User::find($id)->update($data);
+        $user = User::find($id);
+        $user->update($data);
+
+        return $user->refresh();
     }
 
     public function delete($id)

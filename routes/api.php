@@ -15,9 +15,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('auth.logout');
 
     Route::prefix('user')->group(function () {
-        Route::get('/all', [UserController::class, 'all'])->name('user.all');
-        Route::get('/detail/{id}', [UserController::class, 'detail'])->name('user.detail')->middleware('hashids');
-        Route::put('/update/{id}', [UserController::class, 'update'])->name('user.update')->middleware('hashids');
-        Route::delete('/delete/{id}', [UserController::class, 'delete'])->name('user.delete')->middleware('hashids');
+        Route::get('/all', [UserController::class, 'all'])->name('user.all')->middleware('ability:user-get');
+        Route::get('/detail/{id}', [UserController::class, 'detail'])->name('user.detail')->middleware('hashids', 'ability:user-detail');
+        Route::put('/update/{id}', [UserController::class, 'update'])->name('user.update')->middleware('hashids', 'ability:user-update');
+        Route::delete('/delete/{id}', [UserController::class, 'delete'])->name('user.delete')->middleware('hashids', 'ability:user-delete');
     });
 });

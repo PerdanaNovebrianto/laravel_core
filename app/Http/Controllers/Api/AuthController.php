@@ -58,14 +58,22 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
-        $currentToken = $request->user()->currentAccessToken();
-
-        if (!$currentToken) {
+        $currentAccessToken = $request->user()->currentAccessToken();
+        if (!$currentAccessToken) {
             return $this->error('Unauthorized', null, 401);
         }
 
-        $this->authService->logout($currentToken);
+        $currentRefreshToken = $request->header('X-Refresh-Token');
+        if (!$currentRefreshToken) {
+            return $this->error('Refresh token is required', null, 401);
+        }
 
-        return $this->success('User logged out successfully', null);
+        try {
+            $this->authService->logout($currentAccessToken, $currentRefreshToken);
+
+            return $this->success('User logged out successfully', null);
+        } catch (\Exception $e) {
+            return $this->error('Failed to logout user', $e->getMessage(), $e->getCode());
+        }
     }
 }

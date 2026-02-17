@@ -49,7 +49,7 @@ return [
 
     'expiration' => null, // Set the default expiration to null
     'access_token_expiration' => env('SANCTUM_ACCESS_TOKEN_EXPIRATION', 1440), // e.g., 60 minutes
-    'refresh_token_expiration' => env('SANCTUM_REFRESH_TOKEN_EXPIRATION', 120960), // e.g., 30 days
+    'refresh_token_expiration' => env('SANCTUM_REFRESH_TOKEN_EXPIRATION', 43200), // e.g., 30 days
 
     /*
     |--------------------------------------------------------------------------

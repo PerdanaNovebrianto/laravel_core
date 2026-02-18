@@ -5,6 +5,7 @@ namespace App\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Support\Facades\Lang;
 
 class AuthRequest extends FormRequest
 {
@@ -48,39 +49,40 @@ class AuthRequest extends FormRequest
     {
         if ($this->routeIs('auth.register')) {
             return [
-                'email.required' => 'Email is required',
-                'email.unique'   => 'Email already exists',
-                'password.min'   => 'Password must be at least 8 characters',
-                'password.max'   => 'Password must be less than 16 characters',
-                'name.required' => 'Name is required',
-                'name.string' => 'Name must be a string',
-                'name.max' => 'Name must be less than 255 characters',
-                'phone.regex' => 'Phone must be a valid phone number',
-                'phone.min' => 'Phone must be at least 10 characters',
-                'phone.max' => 'Phone must be less than 14 characters',
-                'photo.mimes' => 'Photo must be a valid image file (jpeg, png, jpg)',
-                'photo.max' => 'Photo must be less than 2MB',
+                'email.required' => Lang::get('validation.required_fill'),
+                'email.email'    => Lang::get('validation.format_email'),
+                'email.unique'   => Lang::get('validation.unique_email'),
+                'password.min'   => Lang::get('validation.min_length', ['min' => 8]),
+                'password.max'   => Lang::get('validation.max_length', ['max' => 16]),
+                'name.required' => Lang::get('validation.required_fill'),
+                'name.string' => Lang::get('validation.only_letters'),
+                'name.max' => Lang::get('validation.max_length', ['max' => 255]),
+                'phone.regex' => Lang::get('validation.format_phone'),
+                'phone.min' => Lang::get('validation.min_length', ['min' => 10]),
+                'phone.max' => Lang::get('validation.max_length', ['max' => 14]),
+                'photo.mimes' => Lang::get('validation.file_type', ['values' => 'jpeg, png, jpg']),
+                'photo.max' => Lang::get('validation.file_size', ['max' => 2]),
             ];
         }
         
         if ($this->routeIs('auth.login')) {
             return [
-                'email.required' => 'Email is required',
-                'email.email'    => 'Email is not valid email address',
-                'password.required' => 'Password is required',
-                'password.min'   => 'Password must be at least 8 characters',
-                'password.max'   => 'Password must be less than 16 characters',
+                'email.required' => Lang::get('validation.required_fill'),
+                'email.email'    => Lang::get('validation.format_email'),
+                'password.required' => Lang::get('validation.required_fill'),
+                'password.min'   => Lang::get('validation.min_length', ['min' => 8]),
+                'password.max'   => Lang::get('validation.max_length', ['max' => 16]),
             ];
         }
 
         if ($this->routeIs('auth.updatePassword')) {
             return [
-                'password.required' => 'Password is required',
-                'password.min'   => 'Password must be at least 8 characters',
-                'password.max'   => 'Password must be less than 16 characters',
-                'new_password.required' => 'New password is required',
-                'new_password.min'   => 'New password must be at least 8 characters',
-                'new_password.max'   => 'New password must be less than 16 characters',
+                'password.required' => Lang::get('validation.required_fill'),
+                'password.min'   => Lang::get('validation.min_length', ['min' => 8]),
+                'password.max'   => Lang::get('validation.max_length', ['max' => 16]),
+                'new_password.required' => Lang::get('validation.required_fill'),
+                'new_password.min'   => Lang::get('validation.min_length', ['min' => 8]),
+                'new_password.max'   => Lang::get('validation.max_length', ['max' => 16]),
             ];
         }
     }

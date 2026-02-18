@@ -3,6 +3,7 @@
 namespace App\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Lang;
 
 class UserRequest extends FormRequest
 {
@@ -21,14 +22,14 @@ class UserRequest extends FormRequest
     {
         if ($this->routeIs('user.update')) {
             return [
-                'name.required' => 'Name is required',
-                'name.string' => 'Name must be a string',
-                'name.max' => 'Name must be less than 255 characters',
-                'phone.regex' => 'Phone must be a valid phone number',
-                'phone.min' => 'Phone must be at least 10 characters',
-                'phone.max' => 'Phone must be less than 14 characters',
-                'photo.mimes' => 'Photo must be a valid image file (jpeg, png, jpg)',
-                'photo.max' => 'Photo must be less than 2MB',
+                'name.required' => Lang::get('validation.required_fill'),
+                'name.string' => Lang::get('validation.only_letters'),
+                'name.max' => Lang::get('validation.max_length', ['max' => 255]),
+                'phone.regex' => Lang::get('validation.format_phone'),
+                'phone.min' => Lang::get('validation.min_length', ['min' => 10]),
+                'phone.max' => Lang::get('validation.max_length', ['max' => 14]),
+                'photo.mimes' => Lang::get('validation.file_type', ['values' => 'jpeg, png, jpg']),
+                'photo.max' => Lang::get('validation.file_size', ['max' => 2]),
             ];
         }
     }

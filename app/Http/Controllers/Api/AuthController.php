@@ -8,6 +8,7 @@ use App\Requests\AuthRequest;
 use App\Resources\AuthResource;
 use App\Services\AuthService;
 use App\Traits\ApiResponse;
+use Illuminate\Support\Facades\Lang;
 
 class AuthController extends Controller
 {
@@ -22,9 +23,9 @@ class AuthController extends Controller
         try {
             $user = $this->authService->register($request->all());
 
-            return $this->success('User registered successfully', null);
+            return $this->success(Lang::get('auth.register_success'), null);
         } catch (\Exception $e) {
-            return $this->error('Failed to register user', $e->getMessage(), $e->getCode());
+            return $this->error(Lang::get('auth.register_failed'), $e->getMessage(), $e->getCode());
         }
     }
 
@@ -33,9 +34,9 @@ class AuthController extends Controller
         try {
             $user = $this->authService->login($request->all());
 
-            return $this->success('User logged in successfully', new AuthResource($user));
+            return $this->success(Lang::get('auth.login_success'), new AuthResource($user));
         } catch (\Exception $e) {
-            return $this->error('Failed to login user', $e->getMessage(), $e->getCode());
+            return $this->error(Lang::get('auth.login_failed'), $e->getMessage(), $e->getCode());
         }
     }
 
@@ -44,15 +45,15 @@ class AuthController extends Controller
         $refreshToken = $request->header('X-Refresh-Token');
 
         if (!$refreshToken) {
-            return $this->error('Refresh token is required', null, 401);
+            return $this->error(Lang::get('auth.refresh_token_required'), null, 401);
         }
 
         try {
             $tokens = $this->authService->refreshToken($refreshToken);
             
-            return $this->success('Tokens refreshed successfully', new AuthResource($tokens));
+            return $this->success(Lang::get('auth.refresh_token_success'), new AuthResource($tokens));
         } catch (\Exception $e) {
-            return $this->error('Failed to refresh tokens', $e->getMessage(), $e->getCode());
+            return $this->error(Lang::get('auth.refresh_token_failed'), $e->getMessage(), $e->getCode());
         }
     }
 
@@ -60,20 +61,20 @@ class AuthController extends Controller
     {
         $currentAccessToken = $request->user()->currentAccessToken();
         if (!$currentAccessToken) {
-            return $this->error('Unauthorized', null, 401);
+            return $this->error(Lang::get('auth.unauthorized'), null, 401);
         }
 
         $currentRefreshToken = $request->header('X-Refresh-Token');
         if (!$currentRefreshToken) {
-            return $this->error('Refresh token is required', null, 401);
+            return $this->error(Lang::get('auth.refresh_token_required'), null, 401);
         }
 
         try {
             $this->authService->logout($currentAccessToken, $currentRefreshToken);
 
-            return $this->success('User logged out successfully', null);
+            return $this->success(Lang::get('auth.logout_success'), null);
         } catch (\Exception $e) {
-            return $this->error('Failed to logout user', $e->getMessage(), $e->getCode());
+            return $this->error(Lang::get('auth.logout_failed'), $e->getMessage(), $e->getCode());
         }
     }
 }

@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Repositories\UserRepository;
 use App\Repositories\ProfileRepository;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Lang;
 
 class UserService
 {
@@ -22,7 +23,7 @@ class UserService
     {
         $user = $this->userRepo->getById($id);
         if (!$user) {
-            throw new \Exception('User not found', 404);
+            throw new \Exception(Lang::get('user.user_not_found'), 404);
         }
 
         $user->load('role', 'profile');
@@ -34,12 +35,12 @@ class UserService
     {
         $user = $this->userRepo->getById($id);
         if (!$user) {
-            throw new \Exception('User not found', 404);
+            throw new \Exception(Lang::get('user.user_not_found'), 404);
         }
 
         $profile = $this->profileRepo->getByUserId($user->id);
         if (!$profile) {
-            throw new \Exception('Profile not found', 404);
+            throw new \Exception(Lang::get('user.user_not_found'), 404);
         }
 
         return DB::transaction(function () use ($data, $profile, $user) {
@@ -57,7 +58,7 @@ class UserService
     {
         $user = $this->userRepo->getById($id);
         if (!$user) {
-            throw new \Exception('User not found', 404);
+            throw new \Exception(Lang::get('user.user_not_found'), 404);
         }
 
         return DB::transaction(function () use ($user) {

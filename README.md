@@ -17,6 +17,7 @@ A RESTful API backend built with **Laravel 12** featuring authentication, role-b
 - **Authentication** — Register, login, logout, and token refresh using Laravel Sanctum with separate access and refresh tokens
 - **Role-Based Access Control** — Roles with granular privilege strings checked via Sanctum abilities middleware
 - **User Management** — Full CRUD with profile support (name, phone, photo)
+- **API Localization** — Multi-language API responses via `X-App-Locale` header; supports English (`en`) and Indonesian (`id`) with localized messages for auth, user, and validation domains
 - **Hashids Middleware** — Automatically decodes hashed IDs in route parameters for secure, non-sequential public IDs
 - **Repository-Service Pattern** — Clean separation of data access (Repositories) and business logic (Services)
 - **API Resources** — Consistent, route-aware JSON response transformation
@@ -34,6 +35,7 @@ app/
 │   │   ├── AuthController.php      # Authentication endpoints
 │   │   └── UserController.php      # User CRUD endpoints
 │   └── Middleware/
+│       ├── ApiLocalization.php     # Sets app locale from request header
 │       └── DecodeHashids.php       # Decodes hashed route parameters
 ├── Models/
 │   ├── User.php                    # User model (Sanctum, SoftDeletes)
@@ -56,17 +58,39 @@ app/
 │   └── UserService.php             # User business logic
 └── Traits/
     └── ApiResponse.php             # Standardized JSON responses
+
+lang/
+├── en/                             # English language
+└── id/                             # Indonesian language
+
 ```
 
 ## Database Schema
 
-| Table                    | Description                                      |
-|--------------------------|--------------------------------------------------|
+| Table                    | Description                                       |
+|--------------------------|---------------------------------------------------|
 | `users`                  | Email, password, status, role foreign key         |
 | `profiles`               | Name, phone, photo — belongs to a user            |
 | `roles`                  | Role name and comma-separated privilege strings   |
 | `privileges`             | Privilege definitions grouped by feature          |
 | `personal_access_tokens` | Sanctum token storage with expiration support     |
+
+## API Localization
+
+All API routes are wrapped with the `api.localization` middleware. To receive localized response messages, include the `X-App-Locale` header in your requests:
+
+```
+X-App-Locale: id
+```
+
+| Locale | Language          |
+|--------|-------------------|
+| `en`   | English (default) |
+| `id`   | Indonesian        |
+
+If the header is omitted or contains an unsupported value, the API defaults to English. The header value is case-insensitive (e.g., `EN`, `Id`, and `en` are all accepted).
+
+Translation files are located under `lang/{locale}/` and cover `auth`, `user`, and `validation` message groups.
 
 ## Installation
 

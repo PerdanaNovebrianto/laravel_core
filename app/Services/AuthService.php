@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Sanctum\PersonalAccessToken;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Lang;
 
 class AuthService
 {
@@ -42,7 +43,7 @@ class AuthService
         $user = $this->userRepo->getByEmail($data['email']);
 
         if (!$user || !Hash::check($data['password'], $user->password)) {
-            throw new \Exception('Invalid credentials', 401);
+            throw new \Exception(Lang::get('auth.invalid_credentials'), 401);
         }
 
         $user->load('role', 'profile');
@@ -69,12 +70,12 @@ class AuthService
         $tokenInstance = PersonalAccessToken::findToken($plainTextToken);
     
         if (!$tokenInstance || !$tokenInstance->can('refresh-token')) {
-            throw new \Exception('Invalid refresh token.');
+            throw new \Exception(Lang::get('auth.refresh_token_invalid'), 401);
         }
     
         if ($tokenInstance->expires_at && $tokenInstance->expires_at->isPast()) {
             $tokenInstance->delete();
-            throw new \Exception('Refresh token expired.');
+            throw new \Exception(Lang::get('auth.refresh_token_expired'), 401);
         }
     
         $user = $tokenInstance->tokenable;

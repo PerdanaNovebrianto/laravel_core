@@ -11,9 +11,16 @@ class UserRequest extends FormRequest
     {
         if ($this->routeIs('user.update')) {
             return [
+                'id'       => 'required',
                 'name'     => 'required|string|max:255',
                 'phone'    => 'nullable|regex:/[0-9]/|min:10|max:14',
                 'photo'    => 'nullable|mimes:jpeg,png,jpg|max:2048',
+            ];
+        }
+
+        if ($this->routeIs('user.delete')) {
+            return [
+                'id' => 'required',
             ];
         }
     }
@@ -22,6 +29,7 @@ class UserRequest extends FormRequest
     {
         if ($this->routeIs('user.update')) {
             return [
+                'id.required' => Lang::get('validation.required', ['attribute' => 'User ID']),
                 'name.required' => Lang::get('validation.required_fill'),
                 'name.string' => Lang::get('validation.only_letters'),
                 'name.max' => Lang::get('validation.max_length', ['max' => 255]),
@@ -30,6 +38,12 @@ class UserRequest extends FormRequest
                 'phone.max' => Lang::get('validation.max_length', ['max' => 14]),
                 'photo.mimes' => Lang::get('validation.file_type', ['values' => 'jpeg, png, jpg']),
                 'photo.max' => Lang::get('validation.file_size', ['max' => 2]),
+            ];
+        }
+
+        if ($this->routeIs('user.delete')) {
+            return [
+                'id.required' => Lang::get('validation.required', ['attribute' => 'User ID']),
             ];
         }
     }

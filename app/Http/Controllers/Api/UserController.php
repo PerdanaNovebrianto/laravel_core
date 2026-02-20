@@ -8,6 +8,7 @@ use App\Resources\UserResource;
 use App\Requests\UserRequest;
 use App\Services\UserService;
 use App\Traits\ApiResponse;
+use Illuminate\Support\Facades\Lang;
 
 class UserController extends Controller
 {
@@ -39,8 +40,13 @@ class UserController extends Controller
         }
     }
 
-    public function update(UserRequest $request, string $id)
+    public function update(UserRequest $request)
     {
+        $id = decode_hashid($request->id);
+        if (!$id) {
+            return $this->error(Lang::get('user.user_not_found'), null, 404);
+        }
+            
         try {
             $user = $this->userService->update($request->all(), $id);
 
@@ -50,8 +56,13 @@ class UserController extends Controller
         }
     }
 
-    public function delete(string $id)
+    public function delete(UserRequest $request)
     {
+        $id = decode_hashid($request->id);
+        if (!$id) {
+            return $this->error(Lang::get('user.user_not_found'), null, 404);
+        }
+
         try {
             $this->userService->delete($id);
             

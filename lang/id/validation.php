@@ -9,6 +9,7 @@ return [
     'min_length' => 'Panjang karakter tidak boleh kurang dari :min karakter.',
     'only_letters' => 'Harus hanya berisi huruf.',
     'only_numbers' => 'Harus hanya berisi angka.',
+    'required' => ':attribute harus diisi.',
     'required_fill' => 'Harus diisi.',
     'required_select' => 'Harus dipilih.',
     'unique_email' => 'Email sudah terdaftar.',

@@ -18,8 +18,8 @@ Route::middleware('api.localization')->group(function () {
         Route::prefix('user')->group(function () {
             Route::get('/all', [UserController::class, 'all'])->name('user.all')->middleware('ability:user-get');
             Route::get('/detail/{id}', [UserController::class, 'detail'])->name('user.detail')->middleware('hashids', 'ability:user-detail');
-            Route::put('/update/{id}', [UserController::class, 'update'])->name('user.update')->middleware('hashids', 'ability:user-update');
-            Route::delete('/delete/{id}', [UserController::class, 'delete'])->name('user.delete')->middleware('hashids', 'ability:user-delete');
+            Route::put('/update', [UserController::class, 'update'])->name('user.update')->middleware('ability:user-update');
+            Route::delete('/delete', [UserController::class, 'delete'])->name('user.delete')->middleware('ability:user-delete');
         });
     });
 });

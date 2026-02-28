@@ -52,14 +52,14 @@ class AuthRequest extends FormRequest
                 'email.required' => Lang::get('validation.required_fill'),
                 'email.email'    => Lang::get('validation.format_email'),
                 'email.unique'   => Lang::get('validation.unique_email'),
-                'password.min'   => Lang::get('validation.min_length', ['min' => 8]),
-                'password.max'   => Lang::get('validation.max_length', ['max' => 16]),
+                'password.min'   => Lang::get('validation.min_length', ['attribute' => 'Password', 'min' => 8]),
+                'password.max'   => Lang::get('validation.max_length', ['attribute' => 'Password', 'max' => 16]),
                 'name.required' => Lang::get('validation.required_fill'),
                 'name.string' => Lang::get('validation.only_letters'),
-                'name.max' => Lang::get('validation.max_length', ['max' => 255]),
+                'name.max' => Lang::get('validation.max_length', ['attribute' => 'Name', 'max' => 255]),
                 'phone.regex' => Lang::get('validation.format_phone'),
-                'phone.min' => Lang::get('validation.min_length', ['min' => 10]),
-                'phone.max' => Lang::get('validation.max_length', ['max' => 14]),
+                'phone.min' => Lang::get('validation.min_length', ['attribute' => 'Phone', 'min' => 10]),
+                'phone.max' => Lang::get('validation.max_length', ['attribute' => 'Phone', 'max' => 14]),
                 'photo.mimes' => Lang::get('validation.file_type', ['values' => 'jpeg, png, jpg']),
                 'photo.max' => Lang::get('validation.file_size', ['max' => 2]),
             ];
@@ -70,19 +70,19 @@ class AuthRequest extends FormRequest
                 'email.required' => Lang::get('validation.required_fill'),
                 'email.email'    => Lang::get('validation.format_email'),
                 'password.required' => Lang::get('validation.required_fill'),
-                'password.min'   => Lang::get('validation.min_length', ['min' => 8]),
-                'password.max'   => Lang::get('validation.max_length', ['max' => 16]),
+                'password.min'   => Lang::get('validation.min_length', ['attribute' => 'Password', 'min' => 8]),
+                'password.max'   => Lang::get('validation.max_length', ['attribute' => 'Password', 'max' => 16]),
             ];
         }
 
         if ($this->routeIs('auth.updatePassword')) {
             return [
                 'password.required' => Lang::get('validation.required_fill'),
-                'password.min'   => Lang::get('validation.min_length', ['min' => 8]),
-                'password.max'   => Lang::get('validation.max_length', ['max' => 16]),
+                'password.min'   => Lang::get('validation.min_length', ['attribute' => 'Password', 'min' => 8]),
+                'password.max'   => Lang::get('validation.max_length', ['attribute' => 'Password', 'max' => 16]),
                 'new_password.required' => Lang::get('validation.required_fill'),
-                'new_password.min'   => Lang::get('validation.min_length', ['min' => 8]),
-                'new_password.max'   => Lang::get('validation.max_length', ['max' => 16]),
+                'new_password.min'   => Lang::get('validation.min_length', ['attribute' => 'New Password', 'min' => 8]),
+                'new_password.max'   => Lang::get('validation.max_length', ['attribute' => 'New Password', 'max' => 16]),
             ];
         }
     }

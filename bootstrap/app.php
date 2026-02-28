@@ -26,7 +26,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $exceptions->render(function (AuthenticationException $e, Request $request) {
             if ($request->is('api/*') || $request->expectsJson()) {
                 return response()->json([
-                    'status'  => 'error',
+                    'status'  => false,
                     'message' => 'Unauthenticated',
                 ], 401);
             }
@@ -35,7 +35,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $exceptions->render(function (AccessDeniedHttpException $e, Request $request) {
             if ($request->is('api/*') || $request->expectsJson()) {
                 return response()->json([
-                    'status'  => 'error',
+                    'status'  => false,
                     'message' => 'Forbidden',
                 ], 403);
             }

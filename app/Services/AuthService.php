@@ -43,7 +43,7 @@ class AuthService
         $user = $this->userRepo->getByEmail($data['email']);
 
         if (!$user || !Hash::check($data['password'], $user->password)) {
-            throw new \Exception(Lang::get('auth.invalid_credentials'), 401);
+            throw new \Exception(Lang::get('auth.invalid_credentials'), 400);
         }
 
         $user->load('role', 'profile');

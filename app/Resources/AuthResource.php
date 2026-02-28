@@ -14,18 +14,20 @@ class AuthResource extends JsonResource
     {
         if($request->routeIs('auth.login')) {
             return [
-                'id'      => Hashids::encode($this['user']->id),
-                'email'   => $this['user']->email,
-                'role'    => $this['user']->role ? [
-                    'name'       => $this['user']->role->name,
-                    'privileges' => explode(',', $this['user']->role->privileges),
-                ] : null,
-                'profile' => $this['user']->profile ? [
-                    'name'  => $this['user']->profile->name,
-                    'photo' => $this['user']->profile->photo,
-                ] : null,
                 'access_token'  => $this['access_token'],
                 'refresh_token' => $this['refresh_token'],
+                'user' => [
+                    'id'      => Hashids::encode($this['user']->id),
+                    'email'   => $this['user']->email,
+                    'role'    => $this['user']->role ? [
+                        'name'       => $this['user']->role->name,
+                        'privileges' => explode(',', $this['user']->role->privileges),
+                    ] : null,
+                    'profile' => $this['user']->profile ? [
+                        'name'  => $this['user']->profile->name,
+                        'photo' => $this['user']->profile->photo,
+                    ] : null,
+                ]
             ];
         }
 

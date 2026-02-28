@@ -12,7 +12,7 @@ trait ApiResponse
     protected function success(string $message = 'Success', mixed $data = null): JsonResponse
     {
         $response = [
-            'status'  => 'success',
+            'status'  => true,
             'message' => $message,
         ];
 
@@ -32,7 +32,7 @@ trait ApiResponse
         $code = ($code >= 100 && $code < 600) ? $code : 500;
 
         $response = [
-            'status'  => 'error',
+            'status'  => false,
             'message' => $message,
         ];
 
